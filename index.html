@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina | Concept Store</title>
+    <style>
+        /* --- DESIGN SYSTEM --- */
+        :root {
+            --primary: #6366f1;
+            --secondary: #4338ca;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.8);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--light); color: var(--dark); overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        nav .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; color: var(--primary); cursor: pointer; }
+        .nav-links { list-style: none; display: flex; gap: 30px; align-items: center; }
+        .nav-links li { font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .nav-links li:hover { color: var(--primary); }
+        .cart-btn { background: var(--dark); color: white; padding: 8px 18px; border-radius: 20px; position: relative; }
+
+        /* --- HERO SECTION (Page 1) --- */
+        .hero {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #e0e7ff 0%, #ffffff 100%);
+            border-radius: 0 0 50px 50px;
+        }
+        .hero h1 { font-size: 4rem; margin-bottom: 20px; line-height: 1.1; }
+        .hero p { font-size: 1.2rem; color: #64748b; margin-bottom: 30px; }
+
+        /* --- PRODUCT FILTERS (Page 2) --- */
+        .shop-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .search-input { padding: 12px 20px; border-radius: 30px; border: 1px solid #ddd; width: 300px; }
+        .filter-btns button { 
+            background: white; color: var(--dark); border: 1px solid #ddd; 
+            padding: 8px 20px; border-radius: 20px; margin-left: 5px; 
+        }
+        .filter-btns button.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* --- PRODUCT CARDS --- */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .card { 
+            background: white; border-radius: 24px; padding: 15px; 
+            transition: 0.4s; border: 1px solid #f1f5f9; position: relative;
+        }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        .card img { width: 100%; height: 280px; object-fit: cover; border-radius: 18px; margin-bottom: 15px; }
+        .card-tag { 
+            position: absolute; top: 25px; left: 25px; background: var(--glass); 
+            padding: 4px 12px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; 
+        }
+        .card h3 { font-size: 1.1rem; margin-bottom: 5px; }
+        .card .price { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+
+        /* --- ABOUT SECTION (Page 3) --- */
+        .about-section { padding: 80px 0; display: flex; align-items: center; gap: 50px; }
+        .about-img { flex: 1; border-radius: 30px; overflow: hidden; height: 400px; }
+        .about-img img { width: 100%; height: 100%; object-fit: cover; }
+        .about-text { flex: 1; }
+
+        /* --- CART & CHECKOUT (Page 4) --- */
+        .cart-wrapper { background: white; border-radius: 30px; padding: 40px; margin-top: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .cart-item { display: flex; align-items: center; gap: 20px; padding: 20px 0; border-bottom: 1px solid #eee; }
+        .cart-item img { width: 100px; height: 100px; object-fit: cover; border-radius: 15px; }
+        
+        /* --- UI COMPONENTS --- */
+        button { cursor: pointer; border: none; transition: 0.3s; }
+        .btn-primary { background: var(--primary); color: white; padding: 12px 30px; border-radius: 30px; font-weight: 700; }
+        .btn-primary:hover { background: var(--secondary); transform: scale(1.05); }
+        .badge { background: var(--accent); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; }
+
+        /* --- FOOTER --- */
+        footer { background: var(--dark); color: white; padding: 60px 0; margin-top: 100px; text-align: center; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .page { animation: fadeIn 0.5s ease forwards; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container">
+            <div class="logo" onclick="showPage('home')">LUMINA.</div>
+            <ul class="nav-links">
+                <li onclick="showPage('home')">Home</li>
+                <li onclick="showPage('shop')">Shop</li>
+                <li onclick="showPage('about')">Our Story</li>
+                <li onclick="showPage('cart')" class="cart-btn">
+                    Bag <span id="cart-count" class="badge">0</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="home-page" class="page">
+        <section class="hero">
+            <div class="container">
+                <span class="badge" style="margin-bottom: 20px; padding: 8px 20px;">New Collection 2026</span>
+                <h1>Future Tech for <br> Everyday Living.</h1>
+                <p>Curated selection of minimalist gadgets and lifestyle essentials.</p>
+                <button class="btn-primary" onclick="showPage('shop')">Start Exploring</button>
+            </div>
+        </section>
+        
+        <div class="container" style="padding: 80px 0;">
+            <h2 style="text-align: center; margin-bottom: 40px;">Trending Now</h2>
+            <div id="trending-grid" class="product-grid"></div>
+        </div>
+    </div>
+
+    <div id="shop-page" class="page" style="display:none;">
+        <div class="container">
+            <div class="shop-controls">
+                <h2>Browse All</h2>
+                <input type="text" class="search-input" id="search" placeholder="Search product name..." onkeyup="filterProducts()">
+                <div class="filter-btns">
+                    <button class="active" onclick="setCategory('all', this)">All</button>
+                    <button onclick="setCategory('tech', this)">Tech</button>
+                    <button onclick="setCategory('lifestyle', this)">Lifestyle</button>
+                </div>
+            </div>
+            <div id="full-shop-grid" class="product-grid"></div>
+        </div>
+    </div>
+
+    <div id="about-page" class="page" style="display:none;">
+        <div class="container">
+            <div class="about-section">
+                <div class="about-img">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800" alt="Office">
+                </div>
+                <div class="about-text">
+                    <h2 style="font-size: 3rem; margin-bottom: 20px;">We believe in <br> <span style="color:var(--primary)">Simplicity.</span></h2>
+                    <p style="margin-bottom: 20px;">Founded in 2026, Lumina was born out of a desire to bridge the gap between high-performance technology and minimalist aesthetics.</p>
+                    <p>Every product in our store is hand-picked for its durability, design, and environmental impact. We don't just sell gadgets; we sell a lifestyle of focus.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-page" class="page" style="display:none;">
+        <div class="container">
+            <div class="cart-wrapper">
+                <div id="cart-items"></div>
+                <div id="cart-summary" style="margin-top: 30px; text-align: right;"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 LUMINA Store. All rights reserved.</p>
+            <p style="margin-top: 10px; opacity: 0.5;">Minimalism is the ultimate sophistication.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA: 10 ITEMS ---
+        const products = [
+            { id: 1, name: "Aura Headphones", price: 299, cat: "tech", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500" },
+            { id: 2, name: "Lunar Keyboard", price: 150, cat: "tech", img: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=500" },
+            { id: 3, name: "Smart Totem", price: 450, cat: "tech", img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500" },
+            { id: 4, name: "Zen Desk Mat", price: 45, cat: "lifestyle", img: "https://images.unsplash.com/photo-1616627561839-07437f759f45?w=500" },
+            { id: 5, name: "Titan Laptop Stand", price: 85, cat: "lifestyle", img: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500" },
+            { id: 6, name: "Neo Earbuds", price: 120, cat: "tech", img: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500" },
+            { id: 7, name: "Orbit Watch", price: 320, cat: "tech", img: "https://images.unsplash.com/photo-1508685096489-7aac29fba5b3?w=500" },
+            { id: 8, name: "Canvas Backpack", price: 95, cat: "lifestyle", img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500" },
+            { id: 9, name: "Hydro Flask", price: 35, cat: "lifestyle", img: "https://images.unsplash.com/photo-1602143307185-83e312e952c9?w=500" },
+            { id: 10, name: "E-Ink Tablet", price: 599, cat: "tech", img: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500" }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('lumina_cart')) || [];
+        let currentCat = 'all';
+
+        // --- NAVIGATION LOGIC ---
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById(pageId + '-page').style.display = 'block';
+            
+            if(pageId === 'home') renderGrid('trending-grid', products.slice(0, 3));
+            if(pageId === 'shop') renderGrid('full-shop-grid', products);
+            if(pageId === 'cart') renderCart();
+            window.scrollTo(0,0);
+        }
+
+        // --- RENDER GRID ---
+        function renderGrid(containerId, list) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = list.map(p => `
+                <div class="card">
+                    <span class="card-tag">${p.cat.toUpperCase()}</span>
+                    <img src="${p.img}" alt="${p.name}">
+                    <h3>${p.name}</h3>
+                    <p class="price">$${p.price}</p>
+                    <button class="btn-primary" onclick="addToCart(${p.id})" style="width:100%; margin-top:15px;">Add to Bag</button>
+                </div>
+            `).join('');
+        }
+
+        // --- SHOP FILTERS ---
+        function setCategory(cat, btn) {
+            currentCat = cat;
+            document.querySelectorAll('.filter-btns button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterProducts();
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const filtered = products.filter(p => {
+                const matchCat = currentCat === 'all' || p.cat === currentCat;
+                const matchSearch = p.name.toLowerCase().includes(query);
+                return matchCat && matchSearch;
+            });
+            renderGrid('full-shop-grid', filtered);
+        }
+
+        // --- CART LOGIC ---
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const exists = cart.find(item => item.id === id);
+            if(exists) exists.qty++;
+            else cart.push({...product, qty: 1});
+            updateCart();
+            alert(product.name + " added to bag!");
+        }
+
+        function updateCart() {
+            localStorage.setItem('lumina_cart', JSON.stringify(cart));
+            const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+            document.getElementById('cart-count').innerText = totalItems;
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const summary = document.getElementById('cart-summary');
+            
+            if(cart.length === 0) {
+                container.innerHTML = "<h3>Your bag is empty.</h3>";
+                summary.innerHTML = `<button class="btn-primary" onclick="showPage('shop')">Go Shopping</button>`;
+                return;
+            }
+
+            container.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <img src="${item.img}">
+                    <div style="flex:1">
+                        <h4>${item.name}</h4>
+                        <p>$${item.price} x ${item.qty}</p>
+                    </div>
+                    <button onclick="changeQty(${index}, -1)" style="padding:5px 10px;">-</button>
+                    <span>${item.qty}</span>
+                    <button onclick="changeQty(${index}, 1)" style="padding:5px 10px;">+</button>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            summary.innerHTML = `
+                <h2>Total: $${total}</h2><br>
+                <button class="btn-primary" onclick="checkout()">Complete Checkout</button>
+            `;
+        }
+
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if(cart[index].qty <= 0) cart.splice(index, 1);
+            updateCart();
+            renderCart();
+        }
+
+        function checkout() {
+            alert("🚀 Order processed! Thank you for choosing Lumina.");
+            cart = [];
+            updateCart();
+            showPage('home');
+        }
+
+        // INITIALIZE
+        showPage('home');
+        updateCart();
+
+    </script>
+</body>
+</html>
+</html>
