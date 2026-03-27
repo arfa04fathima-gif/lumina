@@ -66,4 +66,21 @@ nav .container { display: flex; justify-content: space-between; align-items: cen
     cursor: pointer;
 }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } 
+#portfolio {
+  padding: 40px;
+  background: #f9f9f9;
+}
+
+#portfolio h2 {
+  text-align: center;
+}
+
+#portfolio div {
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style-type: square;
+}
+}

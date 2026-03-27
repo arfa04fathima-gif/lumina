@@ -8,8 +8,7 @@ app.use(express.json());
 app.use(cors());
 
 // Use the variable from your .env file
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
+
 
 mongoose.connect(MONGO_URI)
     .then(() => console.log("Successfully connected to MongoDB Atlas!"))
@@ -17,6 +16,7 @@ mongoose.connect(MONGO_URI)
 
 // ... rest of your product schema and routes ...
 
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 mongoose.connect(process.env.MONGO_URI)
     .then(async () => {
