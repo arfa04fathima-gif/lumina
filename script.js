@@ -49,18 +49,17 @@ function createCards(list) {
 
 // --- CART LOGIC ---
 async function addToCart(id) {
-    // 1. Find the product in your local array
     const product = products.find(p => p._id === id || p.id === id);
     
-    // 2. Existing local UI logic
+    // UI Logic (already in your file)
     const exists = cart.find(item => item._id === id || item.id === id);
     if (exists) exists.qty++;
     else cart.push({ ...product, qty: 1 });
     updateCartUI();
 
-    // 3. NEW: Send the data to your MongoDB Backend
+    // DATABASE LOGIC (Add this part)
     try {
-        const response = await fetch(`${API_URL}/cart`, {
+        await fetch(`${API_URL}/cart`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -71,14 +70,9 @@ async function addToCart(id) {
                 image: product.image || product.img
             })
         });
-
-        if (response.ok) {
-            console.log("✅ Success: Data sent to MongoDB");
-        } else {
-            console.error("❌ Server accepted request but failed to save");
-        }
+        console.log("📥 Success: Saved to MongoDB Atlas!");
     } catch (err) {
-        console.error("❌ Connection failed: Is your server.js running?", err);
+        console.error("❌ Database sync failed:", err);
     }
     
     alert(`${product.name} added to bag!`);
