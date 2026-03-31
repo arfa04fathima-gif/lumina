@@ -48,14 +48,30 @@ function createCards(list) {
 }
 
 // --- CART LOGIC ---
-function addToCart(id) {
+async function addToCart(id) {
     const product = products.find(p => p._id === id);
-    const exists = cart.find(item => item._id === id);
-    if (exists) exists.qty++;
-    else cart.push({ ...product, qty: 1 });
-    updateCartUI();
-    alert(`${product.name} added to bag!`);
+    
+    // Send to Backend
+    try {
+        const response = await fetch(`${API_URL}/cart`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                productId: product._id,
+                name: product.name,
+                price: product.price,
+                qty: 1
+            })
+        });
+        if (response.ok) {
+            console.log("Stored in MongoDB Cart!");
+            alert(`${product.name} added to cloud cart!`);
+        }
+    } catch (err) {
+        console.error("Cart sync failed:", err);
+    }
 }
+
 
 function updateCartUI() {
     localStorage.setItem('lumina_cart', JSON.stringify(cart));

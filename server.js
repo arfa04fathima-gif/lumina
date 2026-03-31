@@ -37,7 +37,7 @@ mongoose.connect(process.env.MONGO_URI)
             console.log("✅ SUCCESS: Test product saved! Check Atlas now.");
         }
     })
-    .catch(err => console.error("Error:", err));
+    .catch(err => console.error("Error:", err));    
 
 
 // Now line 6 (or wherever your connect code is) will work:
