@@ -73,5 +73,22 @@ function renderCartPage() {
             <img src="${item.image}" style="width:80px; border-radius:12px;">
             <div style="flex:1"><h4>${item.name}</h4><p>$${item.price} x ${item.qty}</p></div>
         </div>
-    `).join('');
+    `).join('');const seedOnce = async () => {
+  try {
+    // This checks if the collection is empty
+    const count = await Product.countDocuments(); 
+    if (count === 0) {
+      await Product.create({
+        name: "Lumina Laptop",
+        price: 999,
+        category: "Electronics",
+        description: "High-performance laptop for AIML studies."
+      });
+      console.log("🚀 SUCCESS: First product sent to MongoDB!");
+    }
+  } catch (err) {
+    console.log("❌ Seed Error:", err);
+  }
+};
+
 }

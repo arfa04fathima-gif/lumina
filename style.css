@@ -69,14 +69,26 @@ nav .container { display: flex; justify-content: space-between; align-items: cen
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } 
 #portfolio {
   padding: 40px;
-  background: #f9f9f9;
+  body {
+    background-color: #f8fafc; /* A light grey/blue Hex code */
+}
+
+.card {
+    background-color: aliceblue; /* Using a named color */
+}
+
+.footer {
+    background-color: rgba(99, 102, 241, 0.1); /* RGB with 10% transparency */
+}
 }
 
 #portfolio h2 {
   text-align: center;
 }
 
-#portfolio div {
+#portfolio div {body {
+    background-color: #6366f1 !important; 
+}
   margin-bottom: 20px;
 }
 

@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arfa Fathima | Portfolio</title>
@@ -112,8 +110,8 @@ Developed a fully functional e-commerce website with product browsing, cart syst
 
 <div class="card">
 <h2>Contact</h2>
-<p>Email: arfa04fathima@gmail.com</p>
-
+<p>Email: your-email@example.com</p>
+<p>GitHub: github.com/yourusername</p>
 </div>
 
 </section>

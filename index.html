@@ -254,14 +254,36 @@ font-weight: bold;
         }
 
         // --- CART LOGIC ---
-        function addToCart(id) {
-            const product = products.find(p => p.id === id);
-            const exists = cart.find(item => item.id === id);
-            if(exists) exists.qty++;
-            else cart.push({...product, qty: 1});
-            updateCart();
-            alert(product.name + " added to bag!");
-        }
+       async function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    
+    // 1. Existing Local Logic
+    const exists = cart.find(item => item.id === id);
+    if(exists) exists.qty++;
+    else cart.push({...product, qty: 1});
+    updateCart();
+
+    // 2. NEW: Send to MongoDB Backend
+    try {
+        await fetch('http://localhost:5000/api/cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                productId: product.id,
+                name: product.name,
+                price: product.price,
+                qty: 1,
+                image: product.img
+            })
+        });
+        console.log("Data synced to MongoDB");
+    } catch (err) {
+        console.error("Could not sync to database:", err);
+    }
+
+    alert(product.name + " added to bag!");
+}
+        
 
         function updateCart() {
             localStorage.setItem('lumina_cart', JSON.stringify(cart));
