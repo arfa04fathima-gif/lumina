@@ -49,27 +49,39 @@ function createCards(list) {
 
 // --- CART LOGIC ---
 async function addToCart(id) {
-    const product = products.find(p => p._id === id);
+    // 1. Find the product in your local array
+    const product = products.find(p => p._id === id || p.id === id);
     
-    // Send to Backend
+    // 2. Existing local UI logic
+    const exists = cart.find(item => item._id === id || item.id === id);
+    if (exists) exists.qty++;
+    else cart.push({ ...product, qty: 1 });
+    updateCartUI();
+
+    // 3. NEW: Send the data to your MongoDB Backend
     try {
         const response = await fetch(`${API_URL}/cart`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                productId: product._id,
+                productId: product._id || product.id,
                 name: product.name,
                 price: product.price,
-                qty: 1
+                qty: 1,
+                image: product.image || product.img
             })
         });
+
         if (response.ok) {
-            console.log("Stored in MongoDB Cart!");
-            alert(`${product.name} added to cloud cart!`);
+            console.log("✅ Success: Data sent to MongoDB");
+        } else {
+            console.error("❌ Server accepted request but failed to save");
         }
     } catch (err) {
-        console.error("Cart sync failed:", err);
+        console.error("❌ Connection failed: Is your server.js running?", err);
     }
+    
+    alert(`${product.name} added to bag!`);
 }
 
 

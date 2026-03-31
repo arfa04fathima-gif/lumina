@@ -37,7 +37,7 @@ mongoose.connect(process.env.MONGO_URI)
             console.log("✅ SUCCESS: Test product saved! Check Atlas now.");
         }
     })
-    .catch(err => console.error("Error:", err));    
+    .catch(err => console.error("Error:", err));   
 
 
 // Now line 6 (or wherever your connect code is) will work:
@@ -47,6 +47,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // ... rest of your product schema and routes ...
 // Define what a Cart Item looks like
+// 1. Define the Cart Schema
 const cartSchema = new mongoose.Schema({
     productId: String,
     name: String,
@@ -56,13 +57,15 @@ const cartSchema = new mongoose.Schema({
 });
 const Cart = mongoose.model('Cart', cartSchema);
 
-// The Route to save "Add to Cart" data
+// 2. Create the POST route
 app.post('/api/cart', async (req, res) => {
     try {
         const newItem = new Cart(req.body);
         await newItem.save();
-        res.status(201).json({ message: "Saved to MongoDB!" });
+        console.log("📥 New item stored in MongoDB Cart!");
+        res.status(201).json(newItem);
     } catch (err) {
+        console.error("Error saving to cart:", err);
         res.status(500).json({ error: err.message });
     }
 });
