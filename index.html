@@ -265,7 +265,7 @@ font-weight: bold;
 
     // 2. NEW: Send to MongoDB Backend
     try {
-        await fetch('http://localhost:5000/api/cart', {
+        await fetch('https://lumina-alpha-eosin.vercel.app/api/cart', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
